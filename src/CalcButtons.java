@@ -4,6 +4,7 @@ import java.awt.*;
 public class CalcButtons extends JButton {
     protected JButton button;
     protected JTextArea results;
+    protected JTextArea equations;
 
 
     public void addCalcButtons(GUI frame){

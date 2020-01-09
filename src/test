@@ -1,132 +1,156 @@
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.html.HTMLDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 
 public class OperationHandler extends JButton implements ActionListener {
     GUI jframe;
     float number1;
     float number2;
-    float result;
+    float answer;
     String operation;
-    ArrayList<Float> numbers = new ArrayList();
-    public OperationHandler(GUI jframe)
-    {
+    ArrayList<String> numbers = new ArrayList<>();
+    ArrayList<String> removeList = new ArrayList<String>(List.of("f"));
+
+    public OperationHandler(GUI jframe) {
         this.jframe = jframe;
     }
 
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         String operationPerformed = e.getActionCommand();
 
         if (operationPerformed.equalsIgnoreCase("+")) {
-            operation = "+";
-           numbers.add(Float.parseFloat(jframe.textArea.results.getText()));
-           jframe.textArea.results.selectAll();
+            numbers.add(jframe.textArea.results.getText());
+            numbers.add("+");
+            jframe.textArea.results.selectAll();
             jframe.textArea.results.replaceSelection("+");
             //replace text with a plus sign then add a check to see if text has any characters
 
-        }
-        else if (operationPerformed.equalsIgnoreCase("-")){
-            operation = "-";
-            numbers.add(Float.parseFloat(jframe.textArea.results.getText()));
+        } else if (operationPerformed.equalsIgnoreCase("-")) {
+            numbers.add(jframe.textArea.results.getText());
+            numbers.add("-");
             jframe.textArea.results.selectAll();
             jframe.textArea.results.replaceSelection("-");
-        }
-        else if (operationPerformed.equalsIgnoreCase("\\")){
-            operation = "\\";
-            numbers.add(Float.parseFloat(jframe.textArea.results.getText()));
+        } else if (operationPerformed.equalsIgnoreCase("/")) {
+            numbers.add(jframe.textArea.results.getText());
+            numbers.add("/");
             jframe.textArea.results.selectAll();
-            jframe.textArea.results.replaceSelection("\\");
+            jframe.textArea.results.replaceSelection("/");
 
-        }
-        else if (operationPerformed.equalsIgnoreCase("*")){
+        } else if (operationPerformed.equalsIgnoreCase("*")) {
             operation = "*";
-            numbers.add(Float.parseFloat(jframe.textArea.results.getText()));
+            numbers.add(jframe.textArea.results.getText());
+            numbers.add("*");
             jframe.textArea.results.selectAll();
             jframe.textArea.results.replaceSelection("*");
 
-        }
-        else if (operationPerformed.equalsIgnoreCase(".")){
-            jframe.textArea.results.setText(jframe.textArea.results.getText() + ".");
-        }
-        else if (operationPerformed.equalsIgnoreCase("ans")){
-            if (operation.equalsIgnoreCase("+")){
-                number2 = Float.parseFloat(jframe.textArea.results.getText());
-                result = add(number1, number2);
-                jframe.textArea.results.setText(toString());
-                jframe.textArea.results.append(Float.toString(result));
+        } else if (operationPerformed.equalsIgnoreCase(".")) {
+            jframe.textArea.results.append(".");
+        } else if (operationPerformed.equalsIgnoreCase("MC")) {
+            jframe.textArea.results.setText("");
+            numbers.clear();
+            operation = "";
 
+        } else if (operationPerformed.equalsIgnoreCase("back")){
+            try {
+                removeOneText();
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
             }
-            else if (operation.equalsIgnoreCase("-"))
+
+
+        }
+
+        else if (operationPerformed.equalsIgnoreCase("ans")) {
+            numbers.add(jframe.textArea.results.getText());
+            ListIterator f = numbers.listIterator();
+            while (numbers.contains("*") || numbers.contains("/"))
             {
-                number2 = Float.parseFloat(jframe.textArea.results.getText());
-                result = subtract(number1, number2);
-                jframe.textArea.results.setText(toString());
-                jframe.textArea.results.append(Float.toString(result));
+
+                if (f.hasNext()) {
+                    if (numbers.contains("*")) {
+                        int index = numbers.indexOf("*");
+                        answer = Float.parseFloat(numbers.get(index - 1)) * Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                        numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+
+                    } else if (numbers.contains("/")){
+                        int index = numbers.indexOf("/");
+                        for (int i = 0; i < numbers.size(); i++){
+                            System.out.println(numbers.get(i));
+                        }
+                        answer = Float.parseFloat(numbers.get(index - 1)) / Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                        numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+                    }
+                }
+
             }
-            else if (operation.equalsIgnoreCase("*"))
+
+            while (numbers.contains("+") || numbers.contains("-"))
             {
-                number2 = Float.parseFloat(jframe.textArea.results.getText());
-                result = multiply(number1, number2);
-                jframe.textArea.results.setText(toString());
-                jframe.textArea.results.append(Float.toString(result));
 
+                if (f.hasNext()) {
+                    if (numbers.contains("+")) {
+                        int index = numbers.indexOf("+");
+                        answer = Float.parseFloat(numbers.get(index - 1)) + Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                        numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+
+                    } else if (numbers.contains("-")){
+                        int index = numbers.indexOf("-");
+                        for (int i = 0; i < numbers.size(); i++){
+                            System.out.println(numbers.get(i));
+                        }
+                        answer = Float.parseFloat(numbers.get(index - 1)) - Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                       numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+                    }
+                }
 
             }
-            else if (operation.equalsIgnoreCase("\\")){
-                number2 = Float.parseFloat(jframe.textArea.results.getText());
-                result = divide(number1, number2);
-                jframe.textArea.results.setText(toString());
-                jframe.textArea.results.append(Float.toString(result));
+            jframe.textArea.results.setText("");
 
+            for (int i = 0; i < numbers.size(); i++){
+                jframe.textArea.results.append(Float.toString(answer));
             }
-
 
         }
-
     }
-    public float add(float number1, float number2){
+    public float add ( float number1, float number2){
         return number1 + number2;
 
     }
-    public float subtract(float number1, float number2){
+    public float subtract ( float number1, float number2){
         return number1 - number2;
     }
-    public String toString(){
+    public String toString () {
         return number1 + " " + operation + " " + number2 + " =\n";
     }
-    public float multiply(float number1, float number2){
+    public float multiply ( float number1, float number2){
         return number1 * number2;
     }
-    public float divide(float number1,  float number2){
+    public float divide ( float number1, float number2){
         return number1 / number2;
     }
+
+    public void removeOneText() throws BadLocationException {
+        Document textArea = jframe.textArea.results.getDocument();
+       textArea.remove(textArea.getLength() - 1
+               , 1);
+    }
+
+
 }
-
-
- float answer;
-            for (int j = 0; j < numbers.size(); j++) {
-                    if (numbers.get(j).equalsIgnoreCase("*") || numbers.get(j).equalsIgnoreCase("/")) {
-                        if (numbers.get(j).equalsIgnoreCase("*")) {
-                            answer = Float.parseFloat(numbers.get(j - 1)) * Float.parseFloat(numbers.get(j + 1));
-                            numbers.set(j + 1, Float.toString(answer));
-                            numbers.remove(j);
-
-
-                        } else {
-                            answer = Float.parseFloat(numbers.get(j - 1)) / Float.parseFloat(numbers.get(j + 1));
-                            numbers.set(j + 1, Float.toString(answer));
-                            numbers.remove(j);
-                        }
-                    }
-                }
-            jframe.textArea.results.setText("");
-            for (int i = 0; i < numbers.size(); i++) {
-                jframe.textArea.results.append(numbers.get(i) + "\n");
-                System.out.println(numbers.size());
-            }
-
-        }
-                        if (numbers.get(ascount).equalsIgnoreCase("+") || numbers.get(ascount).equalsIgnoreCase("-")) {
 
