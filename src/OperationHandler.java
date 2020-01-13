@@ -63,13 +63,23 @@ public class OperationHandler extends JButton implements ActionListener {
             {
 
                 if (f.hasNext()) {
-                    if (numbers.contains("*")) {
-                        int index = numbers.indexOf("*");
-                        answer = Float.parseFloat(numbers.get(index - 1)) * Float.parseFloat(numbers.get(index + 1));
-                        numbers.set(index, "f");
-                        numbers.set(index - 1, "f");
-                        numbers.set(index + 1, Float.toString(answer));
-                        numbers.removeAll(removeList);
+                    if (numbers.contains("*") && numbers.contains("/")) {
+                        int mindex = numbers.indexOf("*");
+                        int dindex = numbers.indexOf("/");
+                        if (mindex < dindex) {
+                            answer = Float.parseFloat(numbers.get(mindex - 1)) * Float.parseFloat(numbers.get(mindex + 1));
+                            numbers.set(mindex, "f");
+                            numbers.set(mindex - 1, "f");
+                            numbers.set(mindex + 1, Float.toString(answer));
+                            numbers.removeAll(removeList);
+                        }
+                        else {
+                            answer = Float.parseFloat(numbers.get(dindex - 1)) / Float.parseFloat(numbers.get(dindex + 1));
+                            numbers.set(dindex, "f");
+                            numbers.set(dindex - 1, "f");
+                            numbers.set(dindex + 1, Float.toString(answer));
+                            numbers.removeAll(removeList);
+                        }
 
                     } else if (numbers.contains("/")){
                         int index = numbers.indexOf("/");
@@ -82,6 +92,18 @@ public class OperationHandler extends JButton implements ActionListener {
                         numbers.set(index + 1, Float.toString(answer));
                         numbers.removeAll(removeList);
                     }
+                    else if (numbers.contains("*")){
+                        int index = numbers.indexOf("*");
+                        for (int i = 0; i < numbers.size(); i++){
+                            System.out.println(numbers.get(i));
+                        }
+                        answer = Float.parseFloat(numbers.get(index - 1)) * Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                        numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+
+                    }
                 }
 
             }
@@ -90,13 +112,24 @@ public class OperationHandler extends JButton implements ActionListener {
             {
 
                 if (f.hasNext()) {
-                    if (numbers.contains("+")) {
-                        int index = numbers.indexOf("+");
-                        answer = Float.parseFloat(numbers.get(index - 1)) + Float.parseFloat(numbers.get(index + 1));
-                        numbers.set(index, "f");
-                        numbers.set(index - 1, "f");
-                        numbers.set(index + 1, Float.toString(answer));
-                        numbers.removeAll(removeList);
+                    if (numbers.contains("+") && numbers.contains("-")) {
+                        int aindex = numbers.indexOf("+");
+                        int sindex = numbers.indexOf("-");
+                        if (aindex < sindex) {
+                            answer = Float.parseFloat(numbers.get(aindex - 1)) + Float.parseFloat(numbers.get(aindex + 1));
+                            numbers.set(aindex, "f");
+                            numbers.set(aindex - 1, "f");
+                            numbers.set(aindex + 1, Float.toString(answer));
+                            numbers.removeAll(removeList);
+                        }
+                        else{
+                            answer = Float.parseFloat(numbers.get(sindex - 1)) - Float.parseFloat(numbers.get(sindex + 1));
+                            numbers.set(sindex, "f");
+                            numbers.set(sindex - 1, "f");
+                            numbers.set(sindex + 1, Float.toString(answer));
+                            numbers.removeAll(removeList);
+
+                        }
 
                     } else if (numbers.contains("-")){
                         int index = numbers.indexOf("-");
@@ -107,6 +140,17 @@ public class OperationHandler extends JButton implements ActionListener {
                         numbers.set(index, "f");
                         numbers.set(index - 1, "f");
                        numbers.set(index + 1, Float.toString(answer));
+                        numbers.removeAll(removeList);
+                    }
+                    else if (numbers.contains("+")){
+                        int index = numbers.indexOf("+");
+                        for (int i = 0; i < numbers.size(); i++){
+                            System.out.println(numbers.get(i));
+                        }
+                        answer = Float.parseFloat(numbers.get(index - 1)) + Float.parseFloat(numbers.get(index + 1));
+                        numbers.set(index, "f");
+                        numbers.set(index - 1, "f");
+                        numbers.set(index + 1, Float.toString(answer));
                         numbers.removeAll(removeList);
                     }
                 }
